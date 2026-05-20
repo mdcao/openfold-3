@@ -207,10 +207,9 @@ class PairformerEmbedding(nn.Module):
         single_mask = reshape_inputs(x=single_mask, feat_dims=single_mask.shape[-1:])
         pair_mask = reshape_inputs(x=pair_mask, feat_dims=pair_mask.shape[-2:])
 
-        # Using the DS kernel with chunk tuning and multiple samples causes shape issues
-        # in the DS kernel. To avoid this, chunk tuning is disabled in this case.
-        # TODO: cuEq seems to fail comparison unit tests with the same settings,
-        #  disable for now and verify behavior
+        # The optimized kernels all require that pair bias have size 1 in the
+        # second dimension and cross-sample chunking has to combine the batch
+        # dimensions and expand it.
         use_kernels = (
             use_deepspeed_evo_attention
             or use_cueq_triangle_kernels
