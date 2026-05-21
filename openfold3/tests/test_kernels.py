@@ -438,8 +438,7 @@ class TestKernels(unittest.TestCase):
         if chunk_size is not None and (
             use_deepspeed_evo_attention or use_triton_triangle_kernels
         ):
-            # Chunk tuning is not supported with batch size > 1 for DeepSpeed kernel
-            # Triton kernel works with these shapes but has some numerical differences
+            # Chunk tuning is not supported with batch size > 1 for these kernels
             batch_size = 1
 
         n_res = 200  # Avoid cuEq seq len constraints
@@ -724,8 +723,10 @@ class TestKernels(unittest.TestCase):
         Template Pair Stack.
         """
         batch_size = consts.batch_size
-        if chunk_size is not None:
-            # Chunking is not supported with batch size > 1 for optimized kernels
+        if chunk_size is not None and (
+            use_deepspeed_evo_attention or use_triton_triangle_kernels
+        ):
+            # Chunk tuning is not supported with batch size > 1 for these kernels
             batch_size = 1
 
         n_templ = 3
