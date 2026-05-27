@@ -513,9 +513,20 @@ def writer_update_atom_site(
         for mt, mtn in zip(MoleculeType, MoleculeType._member_names_, strict=True)
     }
 
-    label_seq_id = cif_block["atom_site"]["label_seq_id"].as_array()
+    ligand_res_id = atom_array.res_id.astype(str)
+
+    # Non-polymer ligands do not have entity_poly_seq positions.
+    label_seq_id = cif_block["atom_site"]["label_seq_id"].as_array().astype(str)
     label_seq_id[masks["LIGAND"]] = "."
     cif_block["atom_site"]["label_seq_id"] = label_seq_id
+
+    auth_seq_id = cif_block["atom_site"]["auth_seq_id"].as_array()
+    auth_seq_id = auth_seq_id.astype(
+        np.result_type(auth_seq_id.dtype, ligand_res_id.dtype)
+    )
+    missing_auth_seq_id = masks["LIGAND"] & np.isin(auth_seq_id, [".", "?"])
+    auth_seq_id[missing_auth_seq_id] = ligand_res_id[missing_auth_seq_id]
+    cif_block["atom_site"]["auth_seq_id"] = auth_seq_id
 
     PDB_ins_code = cif_block["atom_site"]["pdbx_PDB_ins_code"].as_array()
     PDB_ins_code[masks["LIGAND"]] = "?"
