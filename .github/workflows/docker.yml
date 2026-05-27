@@ -76,7 +76,7 @@ jobs:
 
       - name: Extract metadata for conda image
         id: meta-conda
-        uses: docker/metadata-action@4f5b5234679dfa19837d4942067c97d7df43b7b3
+        uses: docker/metadata-action@17e943b6741018cb076d01088a79f7a301f67b15
         with:
           images: |
             name=ghcr.io/${{ github.repository }}/openfold3-docker
@@ -88,7 +88,7 @@ jobs:
 
       - name: Build and push conda image
         id: push-conda
-        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf
         with:
           context: .
           file: docker/Dockerfile.conda
@@ -109,7 +109,7 @@ jobs:
 
       - name: Extract metadata for pixi image
         id: meta-pixi
-        uses: docker/metadata-action@4f5b5234679dfa19837d4942067c97d7df43b7b3
+        uses: docker/metadata-action@17e943b6741018cb076d01088a79f7a301f67b15
         with:
           images: |
             name=ghcr.io/${{ github.repository }}/openfold3-docker
@@ -121,7 +121,7 @@ jobs:
 
       - name: Build and push pixi image
         id: push-pixi
-        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf
         with:
           context: .
           file: docker/Dockerfile.pixi
